@@ -1,0 +1,78 @@
+canvas_size = 1500
+main_color = int(random(360))
+min_size = 50
+max_size = 250
+min_sat = 10
+max_sat = 100
+delta_br = 10
+
+def setup():
+    size(canvas_size,canvas_size)
+    colorMode(HSB, 360, 100, 100)
+    background(0,0,100)
+    
+def add_hue(hue):
+    if hue <= 180:
+        add_hue = hue + 180
+    else: 
+        add_hue = hue - 180
+    return add_hue
+    
+def set_color(hue, add_hue):
+    color_type = random(100)
+    
+    if int(color_type) % 2 == 0:
+        chosen_color = hue
+    else:
+        chosen_color = add_hue
+    return chosen_color
+
+def set_sqr(sanvas_size, min_size, max_size):
+    x = int(random(canvas_size))
+    y = int(random(canvas_size))
+    side = int(random(min_size, max_size))
+    return x, y, side
+
+def set_sat(side, min_size, max_size):
+    global min_sat
+    global max_sat
+    delta = side - min_size
+    delta_sat = max_sat - min_sat
+    delta_side = max_size - min_size
+    sat = max_sat - (delta * delta_sat)/delta_side
+    return sat
+
+def set_br(side):
+    global delta_br
+    delta = side - min_size
+    delta_size = max_size - min_size
+    
+    x = random(100)
+    if x%2 == 0:
+        br = 70 + (delta * delta_br)/delta_size
+    else:
+        br = 70 - (delta * delta_br)/delta_size
+    return br
+    
+    
+def draw():
+    global canvas_size
+    global main_color
+    global min_size
+    global max_size
+
+    second_color = add_hue(main_color)
+    
+    clr = set_color(main_color, second_color)
+
+    x, y, side = set_sqr(canvas_size, min_size, max_size)
+    sat = set_sat(side, min_size, max_size)
+#    br = set_br(side)
+    br = 70
+    fill(clr, sat, br)
+    square(x, y, side)
+    
+def mousePressed():
+    noLoop() # stop drawing after mouse click
+    save("processing_test.png")
+    
